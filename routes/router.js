@@ -1,6 +1,6 @@
 const express = require('express');
 const NodeCache = require("node-cache");
-const db = require('../db');
+const db = require('../database/db.js');
 
 const router = express.Router();
 
