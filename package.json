@@ -1,0 +1,24 @@
+{
+  "name": "cachingproxy",
+  "version": "1.0.0",
+  "description": "Forward Proxy Server For Caching",
+  "homepage": "https://github.com/Rohitlyengar/CachingProxy#readme",
+  "bugs": {
+    "url": "https://github.com/Rohitlyengar/CachingProxy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rohitlyengar/CachingProxy.git"
+  },
+  "license": "MIT",
+  "author": "Rohit Iyengar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "node-cache": "^5.1.2"
+  }
+}
