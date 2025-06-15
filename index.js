@@ -1,6 +1,5 @@
 const express = require('express');
 const NodeCache = require('node-cache');
-const striptags = require('striptags');
 
 require('dotenv').config();
 
@@ -10,7 +9,8 @@ const cache = new NodeCache({stdTTL: process.env.TTL ||  60});
 const PORT = process.env.PORT || 3000;
 
 app.get('/', async (req, res) => {
-    const cacheKey = 'Key';
+    const cacheKey = req.query.url;
+
     const cachedData = cache.get(cacheKey);
 
     if(cachedData){
@@ -18,7 +18,7 @@ app.get('/', async (req, res) => {
         return;
     }
     try {
-        const freshData =  await fetchData(req.query.url);
+        const freshData =  await fetchData(cacheKey);
         cache.set(cacheKey, freshData);
         res.send(freshData);
     }
