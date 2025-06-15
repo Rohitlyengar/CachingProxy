@@ -6,12 +6,12 @@ require('dotenv').config();
 
 const app = express();
 const cache = new NodeCache({stdTTL: process.env.TTL ||  60});
-
 const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
 
 app.get('/', async (req, res) => {
     const cacheKey = req.query.url;
-
     const cachedData = cache.get(cacheKey);
 
     db.prepare(`
@@ -43,7 +43,14 @@ app.post('/blacklist', (req, res) => {
     db.prepare(`
     INSERT INTO blacklisted (url) VALUES (?)
     `).run(req.body.url);
-    res.send('Blacklisted');
+    res.send(`Blacklisted ${req.body.url}`);
+});
+
+app.get('/blacklist', (req, res) => {
+    const urls = db.prepare(`
+    SELECT * FROM blacklisted
+    `).all();
+    res.send(urls);
 });
 
 fetchData = async(source) => {
