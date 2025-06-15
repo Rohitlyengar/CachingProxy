@@ -19,7 +19,9 @@ router.get('/', async (req, res) => {
 
     for (const url of urls)
     {
-        if(url['url'] === cacheKey)
+        const blacklisted = normalize(url['url']);
+        const target = normalize(cacheKey);
+        if(target  === blacklisted)
         {
             res.status(403).send('Forbidden Access');
             return;
@@ -41,8 +43,16 @@ router.get('/', async (req, res) => {
     }
 })
 
-fetchData = async(source) => {
+const fetchData = async(source) => {
     return await(await fetch(source)).text();
+}
+
+const normalize = (url) => {
+    return url
+        .replace(/^https?:\/\//, '')
+        .replace(/^www\./, '')
+        .toLowerCase()
+        .split('/')[0];
 }
 
 router.get('/logs', (req, res) => {
