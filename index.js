@@ -1,5 +1,6 @@
 const express = require('express');
 const NodeCache = require('node-cache');
+const db = require('./db');
 
 require('dotenv').config();
 
