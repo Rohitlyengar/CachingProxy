@@ -14,6 +14,10 @@ app.get('/', async (req, res) => {
 
     const cachedData = cache.get(cacheKey);
 
+    db.prepare(`
+    INSERT INTO users (url) VALUES (?)
+    `).run(req.query.url);
+
     if(cachedData){
         res.send(cachedData);
         return;
@@ -26,6 +30,13 @@ app.get('/', async (req, res) => {
     catch(error){
         res.status(500).send('Error fetching data')
     }
+})
+
+app.get('/logs', (req, res) => {
+    const logs = db.prepare(`
+    SELECT * FROM users
+    `).all();
+    res.send(logs);
 })
 
 fetchData = async(source) => {
