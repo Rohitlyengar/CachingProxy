@@ -37,7 +37,14 @@ app.get('/logs', (req, res) => {
     SELECT * FROM users
     `).all();
     res.send(logs);
-})
+});
+
+app.post('/blacklist', (req, res) => {
+    db.prepare(`
+    INSERT INTO blacklisted (url) VALUES (?)
+    `).run(req.body.url);
+    res.send('Blacklisted');
+});
 
 fetchData = async(source) => {
     return await(await fetch(source)).text();
