@@ -3,7 +3,6 @@ const NodeCache = require("node-cache");
 const db = require('../database/db.js');
 
 const router = express.Router();
-
 const cache = new NodeCache({stdTTL: process.env.TTL ||  60});
 
 router.get('/', async (req, res) => {
@@ -12,12 +11,26 @@ router.get('/', async (req, res) => {
 
     db.prepare(`
     INSERT INTO users (url) VALUES (?)
-    `).run(req.query.url);
+    `).run(cacheKey);
+
+    const urls = db.prepare(`
+    SELECT * FROM blacklisted
+    `).all();
+
+    for (const url of urls)
+    {
+        if(url['url'] === cacheKey)
+        {
+            res.status(403).send('Forbidden Access');
+            return;
+        }
+    }
 
     if(cachedData){
         res.send(cachedData);
         return;
     }
+
     try {
         const freshData =  await fetchData(cacheKey);
         cache.set(cacheKey, freshData);
